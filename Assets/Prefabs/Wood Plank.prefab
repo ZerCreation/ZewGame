@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 442699574955498277}
   m_Layer: 0
   m_Name: Wood Plank
-  m_TagString: Untagged
+  m_TagString: material-wood
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

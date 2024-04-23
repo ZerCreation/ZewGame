@@ -1,9 +1,12 @@
 using UnityEngine;
+using UnityEngine.Events;
 
 public class Move : MonoBehaviour
 {
+    public UnityEvent MoveFinished;
+
     private Vector3 _targetPosition;
-    private bool isMoving = false;
+    public bool IsMoving = false;
 
     // Start is called before the first frame update
     void Start()
@@ -22,17 +25,29 @@ public class Move : MonoBehaviour
         //    _targetPosition.z = transform.position.z;
         //}
 
-        //if (isMoving)
+        transform.position = Vector3.MoveTowards(transform.position, _targetPosition, Time.deltaTime * 5);
+
+        if (transform.position == _targetPosition)
         {
-            transform.position = Vector3.MoveTowards(transform.position, _targetPosition, Time.deltaTime * 5);
+            if (IsMoving)
+            {
+                //Debug.Log("Move finished");
+                MoveFinished.Invoke();
+            }
+            IsMoving = false;
         }
+    }
+
+    public void MoveToTarget(Vector3 targetPosition)
+    {
+        OnMoveToNewTarget(targetPosition);
     }
 
     private void OnMoveToNewTarget(Vector3 targetPosition)
     {
         _targetPosition = targetPosition;
         _targetPosition.z = 5f;
-        isMoving = true;
+        IsMoving = true;
         //Debug.Log(transform.position.z);
     }
 }
