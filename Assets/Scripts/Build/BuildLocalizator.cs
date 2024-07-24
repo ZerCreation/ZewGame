@@ -1,5 +1,4 @@
-using System;
-using System.Threading.Tasks;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class BuildLocalizator : MonoBehaviour
@@ -8,9 +7,7 @@ public class BuildLocalizator : MonoBehaviour
     public float Speed = 5f;
 
     private GameObject _freeHuman;
-    private bool _buildStarted = false;
-    //private Vector3 _moveToConstructionTargetPosition;
-    //private Vector3 _targetPosition;
+    private Queue<BuildingTypes> _buildingQueue = new Queue<BuildingTypes>();
 
     // Start is called before the first frame update
     void Start()
@@ -23,29 +20,19 @@ public class BuildLocalizator : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        Vector3 moveToConstructionTargetPosition = Vector3.zero;
-        //Move freeHumanMove = _freeHuman.GetComponent<Move>();
-
         if (Input.GetMouseButtonDown(0))
         {
-            Debug.Log("Clicked");
+            Debug.Log("New build localization selected.");
             BuildConstructionPlace();
 
-            moveToConstructionTargetPosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-            _freeHuman.GetComponent<BuildSetuper>().StartBuild(moveToConstructionTargetPosition);
-            return;
+            Vector3 moveToConstructionTargetPosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+            BuildDispositor freeHumanBuildDispositor = _freeHuman.GetComponent<BuildDispositor>();
+            _buildingQueue.Enqueue(BuildingTypes.WoodCutter);
 
-            //freeHumanMove.MoveFinished.AddListener(async () =>
-            //{
-            //    Debug.Log("Human is in place");
-            //    freeHumanMove.MoveFinished.RemoveAllListeners();
-            //    await _freeHuman.GetComponent<BuildSetuper>().Organize();
-            //});
-            //freeHumanMove.MoveToTarget(moveToConstructionTargetPosition);
-            
-            //Debug.Log("Going");
-            //EventManager.Instance.TriggerMoveEvent(moveToConstructionTargetPosition);
-            _buildStarted = true;
+            if (freeHumanBuildDispositor.CurrentBuildStep == BuildDispositor.BuildSteps.Resting)
+            {
+                freeHumanBuildDispositor.Start(moveToConstructionTargetPosition);
+            }
         }
 
         //if (!_buildStarted) return;

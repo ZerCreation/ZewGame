@@ -59,10 +59,14 @@
     <Analyzer Include="E:\Games\Unity\Hub\Editor\2022.3.12f1\Editor\Data\Tools\Unity.SourceGenerators\Unity.Properties.SourceGenerator.dll" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Assets\Scripts\BuildSetuper.cs" />
+    <Compile Include="Assets\Scripts\Build\MaterialsPlanner.cs" />
+    <Compile Include="Assets\Scripts\Build\Buildings\BuildingBase.cs" />
     <Compile Include="Assets\Scripts\EventManager.cs" />
-    <Compile Include="Assets\Scripts\BuildLocalizator.cs" />
+    <Compile Include="Assets\Scripts\Build\Buildings\BuildingTypes.cs" />
+    <Compile Include="Assets\Scripts\Build\BuilderDispositor.cs" />
+    <Compile Include="Assets\Scripts\Build\BuildLocalizator.cs" />
     <Compile Include="Assets\Scripts\Move.cs" />
+    <Compile Include="Assets\Scripts\Build\Materials\BuildMaterial.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="UnityEngine">
