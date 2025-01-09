@@ -4,12 +4,12 @@ using UnityEngine;
 
 public class ResourcesPlanner : MonoBehaviour
 {
-    public Queue<BuildMaterial> GetAllNeededMaterials(BuildingTypes buildingType)
+    public Queue<BuildMaterial> GetAllNeededMaterials(BuildingType buildingType)
     {
         // Use dynamic resources
         switch (buildingType)
         {
-            case BuildingTypes.WoodCutter:
+            case BuildingType.WoodCutter:
                 return new Queue<BuildMaterial>(
                     new BuildMaterial[]
                     {

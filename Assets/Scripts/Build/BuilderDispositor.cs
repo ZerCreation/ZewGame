@@ -15,7 +15,10 @@ public class BuildDispositor : MonoBehaviour
         }
     }
 
-    private BuildSteps _currentBuildStep { get; set; }
+    //public int ConstructionProgress;
+
+    private BuildSteps _currentBuildStep;
+    private IConstruction _currentBuilding;
     private Vector3 _buildPosition;
     private GameObject _processingMaterial;
     private Queue<BuildMaterial> _currentMaterialsQueue = new Queue<BuildMaterial>();
@@ -26,7 +29,6 @@ public class BuildDispositor : MonoBehaviour
     {
         _resourcesPlanner = BuildPlanner.GetComponent<ResourcesPlanner>();
 
-        _buildPosition = transform.position;
         CurrentBuildStep = BuildSteps.Resting;
     }
 
@@ -63,7 +65,8 @@ public class BuildDispositor : MonoBehaviour
         {
             if (!_currentMaterialsQueue.Any())
             {
-                _currentMaterialsQueue = _resourcesPlanner.GetAllNeededMaterials(BuildingTypes.WoodCutter);
+                // TODO: Get it from building
+                _currentMaterialsQueue = _resourcesPlanner.GetAllNeededMaterials(BuildingType.WoodCutter);
             }
             string materialName = _currentMaterialsQueue.Dequeue().ToString();
             _processingMaterial = GameObject.Find(materialName);
@@ -104,6 +107,8 @@ public class BuildDispositor : MonoBehaviour
         if (CurrentBuildStep == BuildSteps.Assembling)
         {
             // Start animation
+            _currentBuilding.AssembleMaterial();
+            // Takes some time
 
             Destroy(_processingMaterial);
             CurrentBuildStep = BuildSteps.Inspecting;
@@ -119,21 +124,17 @@ public class BuildDispositor : MonoBehaviour
                 CurrentBuildStep = BuildSteps.Planning;
                 return;
             }
-            // Count the rest of needed materials
-            //if (woodsUsed < woodsNeeded)
-            //{
-            //    CurrentBuildStep = BuildSteps.TakingMaterial;
-            //    return;
-            //}
             Debug.Log("Building is finished.");
 
             CurrentBuildStep = BuildSteps.Resting;
         }
     }
 
-    public void Start(Vector3 buildPosition)
+    public void Initialize(IConstruction building)
     {
-        _buildPosition = buildPosition;
+        _currentBuilding = building;
+
+        _buildPosition = building.Localization;
         _buildPosition.z = 5f;
         CurrentBuildStep = BuildSteps.GoingToStart;
     }

@@ -7,7 +7,7 @@ public class BuildLocalizator : MonoBehaviour
     public float Speed = 5f;
 
     private GameObject _freeHuman;
-    private Queue<BuildingTypes> _buildingQueue = new Queue<BuildingTypes>();
+    private Queue<IConstruction> _buildingQueue = new Queue<IConstruction>();
 
     // Start is called before the first frame update
     void Start()
@@ -23,50 +23,31 @@ public class BuildLocalizator : MonoBehaviour
         if (Input.GetMouseButtonDown(0))
         {
             Debug.Log("New build localization selected.");
-            BuildConstructionPlace();
+            MarkConstructionPlace();
 
             Vector3 moveToConstructionTargetPosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-            BuildDispositor freeHumanBuildDispositor = _freeHuman.GetComponent<BuildDispositor>();
-            _buildingQueue.Enqueue(BuildingTypes.WoodCutter);
+            var newConstruction = new WoodCutterHouse(BuildingType.WoodCutter, moveToConstructionTargetPosition);
+            _buildingQueue.Enqueue(newConstruction);
 
+            Debug.Log(newConstruction.Progress);
+            ConstructionSite.GetComponent<ConstructionProgress>().Construction = newConstruction;
+
+            BuildDispositor freeHumanBuildDispositor = _freeHuman.GetComponent<BuildDispositor>();
             if (freeHumanBuildDispositor.CurrentBuildStep == BuildDispositor.BuildSteps.Resting)
             {
-                freeHumanBuildDispositor.Start(moveToConstructionTargetPosition);
+                freeHumanBuildDispositor.Initialize(newConstruction);
             }
         }
-
-        //if (!_buildStarted) return;
-
-        //if (!freeHumanMove.IsMoving)
-        //{
-        //    //Debug.Log("Human is in place");
-        //    //GameObject woodPlank = GameObject.Find("Wood Plank");
-        //    //freeHumanMove.MoveToTarget(woodPlank.transform.position);
-        //    //GameObject.FindGameObjectsWithTag("material-wood");
-        //}
-
-        // TODO: Enqueue moves
-        // first target
-        // freeHumanMove.MoveToTarget(targets[0]);
-        // action after reaching first target
-        //             freeHumanMove.MoveFinished.AddListener(() =>
-                        //{
-                            // action[0](); // take next action
-                            // freeHumanMove.MoveToTarget(targets[1]); // take next target
-                        //});
-        // second target
-        // ...
-
-        //_freeHuman.transform.position = Vector3.MoveTowards(_freeHuman.transform.position, _moveToConstructionTargetPosition, Speed * Time.deltaTime);
-        //Debug.Log(_freeHuman.transform.position);
     }
 
-    private void BuildConstructionPlace()
+    private void MarkConstructionPlace()
     {
         var targetPosition = Input.mousePosition;
         targetPosition.z = 1.0f;
         Vector3 objectPos = Camera.main.ScreenToWorldPoint(targetPosition);
-        
-        Instantiate(ConstructionSite, objectPos, Quaternion.identity);
+
+        // TODO: Assign implementation of IConstruction to the ConstructionSite GameObject
+
+        ConstructionSite = Instantiate(ConstructionSite, objectPos, Quaternion.identity, GameObject.Find("Canvas").transform);
     }
 }

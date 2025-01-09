@@ -1,0 +1,4 @@
+public enum BuildingType
+{
+    WoodCutter
+}
